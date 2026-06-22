@@ -5,9 +5,7 @@ services:
     command: >
       sh -c "
         mkdir -p /state /state/workspace /config &&
-        if [ ! -f /state/openclaw.json ]; then
-          printf '{\"gateway\":{\"mode\":\"local\"}}\n' > /state/openclaw.json;
-        fi &&
+        printf '{\"gateway\":{\"mode\":\"local\"}}\n' > /state/openclaw.json &&
         chown -R 1000:1000 /state /config &&
         chmod 700 /state /config &&
         chmod 600 /state/openclaw.json
