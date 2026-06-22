@@ -1,4 +1,18 @@
 services:
+  fix-perms:
+    image: busybox
+    user: "0"
+    command: >
+      sh -c "
+        mkdir -p /state /state/workspace /config &&
+        chown -R 1000:1000 /state /config &&
+        chmod 700 /state /config
+      "
+    volumes:
+      - "${OPENCLAW_CONFIG_DIR:-${HOME:-/tmp}/.openclaw}:/state"
+      - "${OPENCLAW_AUTH_PROFILE_SECRET_DIR:-${HOME:-/tmp}/.openclaw-auth-profile-secrets}:/config"
+    restart: "no"
+
   openclaw-gateway:
     image: ${OPENCLAW_IMAGE:-openclaw:local}
     build: .
@@ -53,6 +67,9 @@ services:
     # Let bundled local-model providers reach host-side LM Studio/Ollama via
     # http://host.docker.internal:<port>. Docker Desktop usually provides this
     # alias; the host-gateway mapping makes it work on Linux Docker Engine too.
+    depends_on:
+      fix-perms:
+        condition: service_completed_successfully
     cap_drop:
       - NET_RAW
       - NET_ADMIN
