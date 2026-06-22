@@ -1,0 +1,22 @@
+{
+  "profile": "eztrucking-locked",
+  "allow": [
+    "backend_read",
+    "send",
+    "web_search",
+    "web_fetch",
+    "browser_managed",
+    "collect_proof",
+    "memory_write",
+    "skill_write"
+  ],
+  "deny": [
+    "shell",
+    "filesystem_write_outside_workspace",
+    "payment",
+    "payout",
+    "amount_emit"
+  ],
+  "browser": { "profile": "isolated", "ssrf_protection": true, "use_real_user_profile": false },
+  "guarantee": "No tool moves funds and no tool emits/sets a payable amount. Payable figures come only from backend document-extraction + reconciliation; disbursement is a human-authorized Lane-A action."
+}

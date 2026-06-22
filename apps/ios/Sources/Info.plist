@@ -9,7 +9,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>OpenClaw</string>
+	<string>EzClaw Agent</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIconName</key>
@@ -51,31 +51,31 @@
 		<string>_openclaw-gw._tcp</string>
 	</array>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>OpenClaw uses your calendars to show events and scheduling context when you enable calendar access.</string>
+	<string>EzClaw Agent uses your calendars to show events and scheduling context when you enable calendar access.</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>OpenClaw uses your calendars to show events and scheduling context when you enable calendar access.</string>
+	<string>EzClaw Agent uses your calendars to show events and scheduling context when you enable calendar access.</string>
 	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
-	<string>OpenClaw uses your calendars to add events when you enable calendar access.</string>
+	<string>EzClaw Agent uses your calendars to add events when you enable calendar access.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>OpenClaw can capture photos or short video clips when requested via the gateway.</string>
+	<string>EzClaw Agent can capture photos or short video clips when requested via the gateway.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>OpenClaw uses your contacts so you can search and reference people while using the assistant.</string>
+	<string>EzClaw Agent uses your contacts so you can search and reference people while using the assistant.</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>OpenClaw discovers and connects to your OpenClaw gateway on the local network.</string>
+	<string>EzClaw Agent discovers and connects to your EzClaw Agent gateway on the local network.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>OpenClaw can share your location in the background when you enable Always.</string>
+	<string>EzClaw Agent can share your location in the background when you enable Always.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>OpenClaw uses your location when you allow location sharing.</string>
+	<string>EzClaw Agent uses your location when you allow location sharing.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>OpenClaw uses the microphone for realtime chat, voice wake, and push-to-talk.</string>
+	<string>EzClaw Agent uses the microphone for realtime chat, voice wake, and push-to-talk.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>OpenClaw may use motion data to support device-aware interactions and automations.</string>
+	<string>EzClaw Agent may use motion data to support device-aware interactions and automations.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>OpenClaw needs photo library access when you choose existing photos to share with your assistant.</string>
+	<string>EzClaw Agent needs photo library access when you choose existing photos to share with your assistant.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
-	<string>OpenClaw uses your reminders to list, add, and complete tasks when you enable reminders access.</string>
+	<string>EzClaw Agent uses your reminders to list, add, and complete tasks when you enable reminders access.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>OpenClaw uses on-device speech recognition for talk mode and voice wake.</string>
+	<string>EzClaw Agent uses on-device speech recognition for talk mode and voice wake.</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>OpenClawAppGroupIdentifier</key>

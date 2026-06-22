@@ -586,7 +586,7 @@ export const en = {
       helpEnableRoom: "4) Enable the bot in your Nextcloud Talk room settings",
       helpEnvTip: "Tip: you can also set NEXTCLOUD_TALK_BOT_SECRET in your env.",
       helpInstallCommand:
-        '2) Run: ./occ talk:bot:install "OpenClaw" "<shared-secret>" "<webhook-url>" --feature webhook --feature response --feature reaction',
+        '2) Run: ./occ talk:bot:install "EzClaw Agent" "<shared-secret>" "<webhook-url>" --feature webhook --feature response --feature reaction',
       helpSsh: "1) SSH into your Nextcloud server",
       instanceUrlPrompt: "Enter Nextcloud instance URL (e.g., https://cloud.example.com)",
       setupTitle: "Nextcloud Talk bot setup",
@@ -770,7 +770,7 @@ export const en = {
       examples: "Examples:",
       installPrompt: "signal-cli not found. Install now?",
       multipleEntries: "Multiple entries: comma-separated.",
-      nextLinkDevice: 'Link device with: signal-cli link -n "OpenClaw"',
+      nextLinkDevice: 'Link device with: signal-cli link -n "EzClaw Agent"',
       nextScanQr: "Scan QR in Signal -> Linked Devices",
       nextStepsTitle: "Signal next steps",
       reinstallPrompt: "signal-cli detected. Reinstall/update now?",

@@ -569,7 +569,7 @@ export const zh_TW = {
       helpEnableRoom: "4) 在 Nextcloud Talk 房間設定中啟用 bot",
       helpEnvTip: "提示：也可以在環境變數中設定 NEXTCLOUD_TALK_BOT_SECRET。",
       helpInstallCommand:
-        '2) 執行：./occ talk:bot:install "OpenClaw" "<shared-secret>" "<webhook-url>" --feature webhook --feature response --feature reaction',
+        '2) 執行：./occ talk:bot:install "EzClaw Agent" "<shared-secret>" "<webhook-url>" --feature webhook --feature response --feature reaction',
       helpSsh: "1) SSH 進入你的 Nextcloud 伺服器",
       instanceUrlPrompt: "輸入 Nextcloud 實例 URL（例如 https://cloud.example.com）",
       setupTitle: "Nextcloud Talk bot 設定",
@@ -747,7 +747,7 @@ export const zh_TW = {
       examples: "範例：",
       installPrompt: "未找到 signal-cli。現在安裝？",
       multipleEntries: "多個項目請用逗號分隔。",
-      nextLinkDevice: '綁定裝置：signal-cli link -n "OpenClaw"',
+      nextLinkDevice: '綁定裝置：signal-cli link -n "EzClaw Agent"',
       nextScanQr: "在 Signal -> Linked Devices 中掃描 QR code",
       nextStepsTitle: "Signal 後續步驟",
       reinstallPrompt: "已偵測到 signal-cli。現在重新安裝/更新？",
