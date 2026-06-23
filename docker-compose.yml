@@ -89,7 +89,7 @@ services:
       - "sh"
       - "-c"
       - >-
-        printf '{"gateway":{"mode":"local","controlUi":{"allowedOrigins":["http://localhost:18789","http://127.0.0.1:18789","https://claw.lawpriority.fun","http://claw.lawpriority.fun","http://eztrucking-claw-fuxhlj-7e25cf-20-92-45-6.sslip.io"]}}}' > /home/node/.openclaw/openclaw.json 2>/dev/null || true;
+        printf '{"gateway":{"mode":"local","controlUi":{"allowedOrigins":["http://localhost:18789","http://127.0.0.1:18789","https://claw.lawpriority.fun","http://claw.lawpriority.fun","http://eztrucking-claw-fuxhlj-7e25cf-20-92-45-6.sslip.io"]}},"model":"anthropic/claude-haiku-4-5","provider":{"type":"anthropic","baseUrl":"https://openrouter.ai/api/v1"}}' > /home/node/.openclaw/openclaw.json 2>/dev/null || true;
         exec node dist/index.js gateway
         --bind ${OPENCLAW_GATEWAY_BIND:-auto}
         --port 18789
