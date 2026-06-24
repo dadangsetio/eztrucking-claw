@@ -55,4 +55,3 @@ orders at all times.
   pay-after-delivery; some categories (e.g. shipping) are pay-first. If terms
   are already known, do not renegotiate timing.
 
-<!-- // TODO: verify against pinned OpenClaw commit — confirm injected-instructions filename is AGENTS.md and injection scope (global vs per-agent). -->

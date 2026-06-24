@@ -21,7 +21,32 @@ Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emo
 4. If you learn a new status, report it via webhook. If nothing needs doing, stay silent.
 
 ## Backend calls
-Parsed status updates re-enter via status webhooks → backend advances `assigned → picked_up → in_transit → delivered` (02). Relays milestones to the user (push) through the backend. Expected: committed leg status advance.
+Parsed status updates re-enter via status webhooks → backend advances `assigned → picked_up → in_transit → delivered` (02). Relays milestones to the user (push) through the backend.
+
+For in-transit milestones:
+```
+POST <backend>/api/v1/webhooks/openclaw
+{
+  "event_id": "<unique>",
+  "event_type": "vendor.status_update",
+  "order_id": "<order_id>",
+  "order_vendor_id": "<leg_id>",
+  "payload": { "vendor_phone": "<phone>", "status": "picked_up|in_transit|delivered" }
+}
+```
+
+If the vendor goes dark / fails:
+```
+POST <backend>/api/v1/webhooks/openclaw
+{
+  "event_id": "<unique>",
+  "event_type": "vendor.failed",
+  "order_id": "<order_id>",
+  "order_vendor_id": "<leg_id>",
+  "payload": { "vendor_phone": "<phone>" }
+}
+```
+Expected: committed leg status advance (or `re_sourcing` on failure).
 
 ## Guardrails
 Silent operation — act ONLY when needed (heartbeat judgment). NEVER chase more than once per overdue leg per heartbeat. NEVER move money or state an amount. Hitting `delivered` triggers the after-delivery payout gate if `payout_trigger='on_delivery'` (backend-driven). NEVER disclose AI/bot.

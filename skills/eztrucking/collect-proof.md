@@ -39,7 +39,7 @@ Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emo
 
 ## Backend calls
 Step 4 — `POST /api/v1/upload` → stores file in object store, returns `file_ref`.
-Step 5 — `POST /webhooks/openclaw` with `proof.collected` → backend creates `price_proof` row using `file_ref`; transitions `proof_status: none → received` (spec 02). ALL extraction/reconciliation is backend (OCR → `extracted_amount` → reconcile vs `quoted_price` → `match`/`diff`/`ambiguous`). Expected: `proof_status='received'`.
+Step 5 — `POST /api/v1/webhooks/openclaw` with `proof.collected` → backend creates `price_proof` row using `file_ref`; transitions `proof_status: none → received` (spec 02). ALL extraction/reconciliation is backend (OCR → `extracted_amount` → reconcile vs `quoted_price` → `match`/`diff`/`ambiguous`). Expected: `proof_status='received'`.
 
 ## Guardrails
 Attaches the document ONLY. NEVER states, computes, rounds, or restates the amount. Has NO tool that emits a payable number and NO tool that triggers payout. Extraction/reconciliation/authorization are 100% backend + human-against-document (PRD §5.6, §10 hallucination/forgery mitigation). Backend drives `received → reconciled → authorized` or `→ mismatch → flagged_to_user` (fail-closed, never auto-pay).
