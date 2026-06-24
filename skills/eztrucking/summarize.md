@@ -23,3 +23,5 @@ POST ranked plan → backend transition `researching → summarized`: creates `o
 
 ## Guardrails
 NEVER move money — approval/charge is Lane A. NEVER commit the transition itself (backend commits). NEVER hide pay-first legs — surface them so the user approves knowingly (PRD §5.4, §10). Reports the agreed `quoted_price` per leg only; does not compute a new payable.
+
+**Reliability gate:** Do not select a vendor whose `reliability_score` is known and below **0.2** — surface a warning to the user instead and propose the next-best option. Always include `reliability_score` in the summary when the value is available, so the user can make an informed choice.
