@@ -447,7 +447,7 @@ function collectProfileConfiguredToolSectionScopeWarnings(params: {
   const profilePolicy = mergeAlsoAllowPolicy(resolveToolProfilePolicy(profile), alsoAllow);
   const uncoveredEntries = collectUncoveredConfiguredToolSectionGrantEntries(
     configuredEntries,
-    profilePolicy,
+    profilePolicy as any,
   );
   if (uncoveredEntries.length === 0) {
     return [];
@@ -498,7 +498,7 @@ function collectByProviderConfiguredToolSectionWarnings(params: {
     const profilePolicy = mergeAlsoAllowPolicy(resolveToolProfilePolicy(profile), alsoAllow);
     const uncoveredEntries = collectUncoveredConfiguredToolSectionGrantEntries(
       params.configuredEntries,
-      profilePolicy,
+      profilePolicy as any,
     );
     if (uncoveredEntries.length === 0) {
       return [];
@@ -634,7 +634,7 @@ function collectInheritedByProviderConfiguredToolSectionWarnings(params: {
     const profilePolicy = mergeAlsoAllowPolicy(resolveToolProfilePolicy(profile), alsoAllow);
     const uncoveredEntries = collectUncoveredConfiguredToolSectionGrantEntries(
       params.configuredEntries,
-      profilePolicy,
+      profilePolicy as any,
     );
     if (uncoveredEntries.length === 0) {
       return [];

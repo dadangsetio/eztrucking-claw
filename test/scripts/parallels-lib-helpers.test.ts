@@ -76,7 +76,7 @@ printf 'owner=%s exists=%s\\n' "$owner" "$([[ -e "$lock_dir" ]] && echo yes || e
   it("resolves macOS desktop users through prlctl fallbacks", () => {
     const root = makeTempDir(tempDirs, "openclaw-parallels-macos-common-");
     const binDir = path.join(root, "bin");
-    const macHome = `${"/"}Users/alice`;
+    const macHome = `/Users/alice`;
     mkdirSync(binDir);
     const prlctlShim = path.join(binDir, "prlctl");
     writeFileSync(
@@ -88,7 +88,7 @@ if [[ "$args" == *"/usr/bin/stat -f %Su /dev/console"* ]]; then
   exit 0
 fi
 if [[ "$args" == *"/usr/bin/dscl . -list /Users NFSHomeDirectory"* ]]; then
-  printf '_daemon /var/root\\r\\nShared %s\\r\\nalice %s\\r\\n' "${`${"/"}Users/Shared`}" "${macHome}"
+  printf '_daemon /var/root\\r\\nShared %s\\r\\nalice %s\\r\\n' "${"/"}Users/Shared" "${macHome}"
   exit 0
 fi
 if [[ "$args" == *"-read ${macHome} NFSHomeDirectory"* ]]; then
