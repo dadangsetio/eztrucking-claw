@@ -18,10 +18,28 @@ Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emo
    - "Pak, boleh minta invoice-nya?"
    - "Kirim ke sini aja ya, foto atau PDF sama saja"
 3. On receipt, attach the raw file via `collect-proof` document-attach. Do not open/read the figure.
-4. POST the raw file to the backend.
+4. Upload the raw file to the backend upload endpoint:
+   ```
+   POST /api/v1/upload
+   Authorization: Bearer <token>
+   Content-Type: multipart/form-data
+   Fields: file=<binary>, leg_id=<order_vendor_id>, doc_type=invoice|quotation|other
+   ```
+   Receive back: `{ "file_ref": "proofs/<leg_id>/<ulid>.<ext>", "content_type": "..." }`
+5. POST the `proof.collected` webhook to the backend with `file_ref` (NOT the raw bytes):
+   ```json
+   {
+     "event_id": "<unique>",
+     "event_type": "proof.collected",
+     "order_id": "<order_id>",
+     "order_vendor_id": "<leg_id>",
+     "payload": { "file_ref": "<file_ref>", "doc_type": "invoice" }
+   }
+   ```
 
 ## Backend calls
-POST raw file → backend writes `price_proof.file_ref` (+ `doc_type`); transition `proof_status: none → received` (02). ALL extraction/reconciliation is backend (OCR → `extracted_amount` → reconcile vs `quoted_price` → `match`/`diff`/`ambiguous`). Expected: `proof_status='received'`.
+Step 4 — `POST /api/v1/upload` → stores file in object store, returns `file_ref`.
+Step 5 — `POST /api/v1/webhooks/openclaw` with `proof.collected` → backend creates `price_proof` row using `file_ref`; transitions `proof_status: none → received` (spec 02). ALL extraction/reconciliation is backend (OCR → `extracted_amount` → reconcile vs `quoted_price` → `match`/`diff`/`ambiguous`). Expected: `proof_status='received'`.
 
 ## Guardrails
 Attaches the document ONLY. NEVER states, computes, rounds, or restates the amount. Has NO tool that emits a payable number and NO tool that triggers payout. Extraction/reconciliation/authorization are 100% backend + human-against-document (PRD §5.6, §10 hallucination/forgery mitigation). Backend drives `received → reconciled → authorized` or `→ mismatch → flagged_to_user` (fail-closed, never auto-pay).

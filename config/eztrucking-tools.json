@@ -1,5 +1,6 @@
 {
-  "profile": "eztrucking-locked",
+  "_note": "AUDIT/SPEC DOCUMENT ONLY — not loaded at runtime. OpenClaw has no auto-discovery for arbitrary JSON in config/. The live tool profile is wired in ~/.openclaw/openclaw.json under the tools{} and browser{} blocks. If this file and openclaw.json ever diverge, openclaw.json is authoritative.",
+  "profile": "messaging",
   "allow": [
     "backend_read",
     "send",
@@ -18,5 +19,5 @@
     "amount_emit"
   ],
   "browser": { "profile": "isolated", "ssrf_protection": true, "use_real_user_profile": false },
-  "guarantee": "No tool moves funds and no tool emits/sets a payable amount. Payable figures come only from backend document-extraction + reconciliation; disbursement is a human-authorized Lane-A action."
+  "guarantee": "No tool moves funds and no tool emits/sets a payable amount. Payable figures come only from backend document-extraction + reconciliation; disbursement is a human-authorized Lane-A action. The red-lines in AGENTS.md are the standing-orders enforcement; the locked tool profile in openclaw.json (deny list) is the structural enforcement."
 }

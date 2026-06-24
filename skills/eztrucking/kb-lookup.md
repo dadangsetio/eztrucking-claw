@@ -21,5 +21,11 @@ Not vendor-facing. The single read boundary for all skills.
 ## Backend calls
 GET cache/vendor/order/state read endpoints (03). Read-only. Expected: requested rows or a cache-miss indicator. No transition.
 
+Key endpoints:
+- `GET /api/v1/vendors/kb?origin=<city>&destination=<city>` — returns fresh price_quote rows (within source-specific TTL) joined with vendor name and phone. Use this first to identify which vendors already have current prices, and invoke `quote-request` only for the rest.
+- `GET /api/v1/vendors?route=<origin>-<destination>` — full vendor list for a route.
+- `GET /api/v1/orders/:id` — order details and requirements.
+- `GET /api/v1/legs/:order_vendor_id/status` — current leg state.
+
 ## Guardrails
 NEVER write, NEVER commit a transition, NEVER hold DB credentials. NEVER emit an amount (it returns cached quote text as data; it does not compute a payable). The single read boundary — other skills route reads through here.

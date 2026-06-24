@@ -20,7 +20,19 @@ Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emo
 3. On vendor confirmation, report it to the backend via webhook.
 
 ## Backend calls
-Report vendor confirmation via webhook → backend `order_vendor.booking_status: planned → confirming → assigned` (02). Aggregate of legs drives `booking → in_transit`. Expected: committed leg `assigned`.
+Report vendor confirmation via webhook → backend `order_vendor.booking_status: planned → confirming → assigned` (02). Aggregate of legs drives `booking → in_transit`.
+
+```
+POST <backend>/api/v1/webhooks/openclaw
+{
+  "event_id": "<unique>",
+  "event_type": "vendor.confirmed",
+  "order_id": "<order_id>",
+  "order_vendor_id": "<leg_id>",
+  "payload": { "vendor_phone": "<phone>" }
+}
+```
+Expected: committed leg `assigned`.
 
 ## Guardrails
 Books ONLY; NEVER disburses (disbursement is backend + human-authorized). NEVER state/restate an amount in the confirmation. Confirm each leg of a split order separately (one isolated run per leg). NEVER disclose AI/bot. NEVER commit the booking transition itself (backend commits).
