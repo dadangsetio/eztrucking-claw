@@ -185,7 +185,7 @@ RUN --mount=type=cache,id=openclaw-bookworm-apt-cache,target=/var/cache/apt,shar
     --mount=type=cache,id=openclaw-bookworm-apt-lists,target=/var/lib/apt,sharing=locked \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      ca-certificates curl git hostname lsof openssl procps python3 tini && \
+      ca-certificates curl git hostname lsof openssl postgresql-client procps python3 tini && \
     update-ca-certificates
 
 RUN chown node:node /app
@@ -196,6 +196,10 @@ COPY --from=runtime-assets --chown=node:node /app/package.json .
 COPY --from=runtime-assets --chown=node:node /app/pnpm-workspace.yaml .
 COPY --from=runtime-assets --chown=node:node /app/patches ./patches
 COPY --from=runtime-assets --chown=node:node /app/openclaw.mjs .
+# EzTrucking standing orders (Bahasa Indonesia + short human-chat persona) and
+# heartbeat orders. Seeded into the agent workspace at boot (see compose command).
+# Without these the deployed agent has no AGENTS.md and replies in default English.
+COPY --from=runtime-assets --chown=node:node /app/AGENTS.md /app/HEARTBEAT.md ./
 COPY --from=runtime-assets --chown=node:node /app/src/agents/templates ./src/agents/templates
 COPY --from=runtime-assets --chown=node:node /app/${OPENCLAW_BUNDLED_PLUGIN_DIR} ./${OPENCLAW_BUNDLED_PLUGIN_DIR}
 COPY --from=runtime-assets --chown=node:node /app/skills ./skills
