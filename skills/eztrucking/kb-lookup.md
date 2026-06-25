@@ -29,10 +29,13 @@ GET cache/vendor/order/state read endpoints (03). Read-only. Expected: requested
 
 Key endpoints (base: `https://eztrucking-be.fishclaw.site`):
 
-- `GET /api/v1/vendors/kb?origin=<city>&destination=<city>` — returns fresh price_quote rows (within source-specific TTL) joined with vendor name and phone. Use this first to identify which vendors already have current prices, and invoke `quote-request` only for the rest.
-- `GET /api/v1/vendors?route=<origin>-<destination>` — full vendor list for a route.
-- `GET /api/v1/orders/:id` — order details and requirements.
-- `GET /api/v1/legs/:order_vendor_id/status` — current leg state.
+- `GET /api/v1/agent/vendors/kb?origin=<city>&destination=<city>&order_id=<order_id>` — returns fresh price_quote rows (within source-specific TTL) joined with vendor name and phone. Use this first to identify which vendors already have current prices, and invoke `quote-request` only for the rest.
+- `GET /api/v1/agent/vendors?route=<origin>-<destination>&order_id=<order_id>` — full vendor list for a route.
+- `GET /api/v1/agent/orders/:id` — order details and requirements.
+- `GET /api/v1/agent/legs/:order_vendor_id/status` — current leg state.
+
+All agent GET requests must include the HMAC signature header (sign empty string with `OPENCLAW_WEBHOOK_SECRET`):
+`X-OpenClaw-Signature: sha256=<hmac-sha256-of-empty-body>`
 
 ## Guardrails
 
