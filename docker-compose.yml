@@ -37,7 +37,6 @@ services:
       OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
       OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: ${OPENCLAW_ALLOW_INSECURE_PRIVATE_WS:-}
-      OPENCLAW_TRUSTED_PROXIES: ${OPENCLAW_TRUSTED_PROXIES:-}
       OPENCLAW_WEB_SEARCH_PROVIDER: ${OPENCLAW_WEB_SEARCH_PROVIDER:-duckduckgo}
       # Direct read/write to the EzTrucking Postgres (another container/deployment).
       # The agent reads/writes via `psql "$DATABASE_URL"` (exec tool is full).
