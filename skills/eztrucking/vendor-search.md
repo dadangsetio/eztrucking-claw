@@ -70,7 +70,7 @@ Content-Type: application/json
   "event_id": "<unique_id>",
   "payload": {
     "name": "Vendor Name",
-    "phone": "0812xxxx",
+    "phone": "<vendor_phone>",
     "routes": ["Jakarta-Surabaya"],
     "truck_types": ["truck"],
     "source": "internet"

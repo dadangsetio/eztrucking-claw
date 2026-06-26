@@ -18,7 +18,7 @@ This skill requires WhatsApp media handling. For now, the workflow is:
 
 ## Tools
 
-`web_fetch` (call backend to confirm document received) + `send` (acknowledge vendor). **NO money/amount tool.**
+`web_fetch` (call backend to confirm document received). `message(action="send", to="<phone>", message="<text>")` — acknowledge vendor. **NO money/amount tool.**
 
 ## Backend API
 
@@ -43,8 +43,8 @@ Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emo
    Headers: X-OpenClaw-Signature: sha256=<hmac>
    ```
 3. Send acknowledgment to vendor. Example WhatsApp:
-   - "Sudah kami terima, ditunggu ya"
-   - "Makasih, kami proses dulu"
+   - `message(action="send", to="<vendor_phone>", message="Sudah kami terima, ditunggu ya")`
+   - `message(action="send", to="<vendor_phone>", message="Makasih, kami proses dulu")`
 4. Backend will handle the document processing and notify admin console.
 
 ## Backend Integration

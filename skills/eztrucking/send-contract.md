@@ -10,11 +10,11 @@ Backend fires a `contract.signed` webhook (to OpenClaw gateway) containing `{ord
 
 ## IMPORTANT: Implementation Note
 
-This skill uses existing WhatsApp `send` tool with a file URL. The backend provides a presigned URL for the signed document.
+This skill uses the `message` tool with the `media` parameter for sending file attachments. The backend provides a presigned URL for the signed document.
 
 ## Tools
 
-`web_fetch` (get the signed document URL from backend) + `send` (send document to vendor WA). **NO money/amount tool.**
+`web_fetch` (get the signed document URL from backend). `message(action="send", to="<phone>", message="<text>", media="<url>")` — send document to vendor WA. **NO money/amount tool.**
 
 ## Backend API
 
@@ -39,13 +39,13 @@ Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emo
    Headers: X-OpenClaw-Signature: sha256=<hmac>
    ```
 3. Build the signed document URL from backend (provided in webhook event as `signed_file_ref`).
-4. Send the file to the vendor's WhatsApp as a document via `send` tool:
+4. Send the file to the vendor's WhatsApp as a document via `message` tool:
    ```
-   send(to="vendor_phone", message="", attachments=[{"url": signed_url, "type": "document"}])
+   message(action="send", to="<vendor_phone>", message="", media="<signed_document_url>")
    ```
 5. Brief confirmation message. Example WhatsApp:
-   - "Pak, ini kontraknya sudah ditandatangani"
-   - "Tolong dicek ya"
+   - `message(action="send", to="<vendor_phone>", message="Pak, ini kontraknya sudah ditandatangani")`
+   - `message(action="send", to="<vendor_phone>", message="Tolong dicek ya")`
 
 ## Backend calls
 

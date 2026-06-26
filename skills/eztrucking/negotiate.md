@@ -10,7 +10,7 @@ Agent decision after a `price_quote` is parsed, where a reference suggests a cou
 
 ## Tools
 
-`send` (one counter), `memory`/`skill` write. **NO money/amount tool** — the counter is a negotiating message, not a payable figure.
+`message(action="send", to="<phone>", message="<text>")` — send one counter message. `memory`/`skill` write. **NO money/amount tool** — the counter is a negotiating message, not a payable figure.
 
 ## Persona
 
@@ -21,7 +21,7 @@ Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emo
 1. Fetch `escalation_pct` from `GET /api/v1/internal/config` before starting.
 2. **If `escalation_pct == 0`:** Skip negotiation entirely. Emit `quote.accepted` with the vendor's original price. No counter message sent.
 3. **If `escalation_pct > 0`:** Read the standing `price_quote.price`, `negotiation_ref` (`reference_price`, `route`, `observed_at`), and cross-vendor comparison via `kb-lookup`. Compute counter = `vendor_price × (1 − escalation_pct/100)`, rounded to nearest whole IDR. Send EXACTLY ONE reference-based counter. Example WhatsApp:
-   - "Pak, biasanya rute ini sekitar 3,8 jt. Bisa di angka itu?"
+   - `message(action="send", to="<vendor_phone>", message="Pak, biasanya rute ini sekitar 3,8 jt. Bisa di angka itu?")`
 4. On reply:
    - Vendor accepts → emit `quote.accepted` with the deal price.
    - Vendor declines → emit `quote.accepted` with the original vendor price.
