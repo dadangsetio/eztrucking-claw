@@ -23,10 +23,10 @@ Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emo
 3. **If `escalation_pct > 0`:** Read the standing `price_quote.price`, `negotiation_ref` (`reference_price`, `route`, `observed_at`), and cross-vendor comparison via `kb-lookup`. Compute counter = `vendor_price × (1 − escalation_pct/100)`, rounded to nearest whole IDR. Send EXACTLY ONE reference-based counter. Example WhatsApp:
    - `message(action="send", to="<vendor_phone>", message="Pak, biasanya rute ini sekitar 3,8 jt. Bisa di angka itu?")`
 4. On reply:
-   - Vendor accepts → emit `quote.accepted` with the deal price.
-   - Vendor declines → emit `quote.accepted` with the original vendor price.
+   - Vendor accepts → emit `quote.stored` with the deal price.
+   - Vendor declines → emit `quote.stored` with the original vendor price (unchanged).
    - No second counter, no pressure.
-5. POST the accepted/standing price; `memory` write.
+5. POST via `quote.stored` webhook with the final price; `memory` write.
 
 ## Backend calls
 

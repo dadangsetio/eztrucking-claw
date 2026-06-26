@@ -27,7 +27,10 @@ Vendor-facing only when negotiating timing — §7a persona required: short, nat
 
 ## Backend calls
 
-POST resolved timing → backend sets leg `order_vendor.payout_trigger` (`on_delivery` default; `on_booking` for pay-first). Backend commits. Expected: stored `payout_trigger`.
+No direct backend POST from this skill. The resolved `payout_trigger` value is stored
+in agent memory and included per-leg in the `summary.ready` webhook (emitted by `summarize`).
+The backend commits `payout_trigger` at summarize time via the `summary.ready` handler —
+not here. Expected: `order_vendor.payout_trigger` set after summarize runs.
 
 ## Guardrails
 
