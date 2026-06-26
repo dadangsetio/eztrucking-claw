@@ -53,16 +53,12 @@ orders at all times.
 
 **BACKEND URL:** `https://eztrucking-be.fishclaw.site`
 
-**All backend calls require HMAC authentication.**
-Use header: `X-OpenClaw-Signature: sha256=<hmac>` where HMAC is computed as:
+**Agent Authentication:**
 
-```
-HMAC-SHA256(body, OPENCLAW_WEBHOOK_SECRET)
-```
+- For READ endpoints: Use header `X-Agent-Key: <OPENCLAW_AGENT_KEY>`
+- For WRITE endpoints (webhooks): Use `X-OpenClaw-Signature: sha256=<hmac_hex>` with HMAC-SHA256(body, OPENCLAW_WEBHOOK_SECRET)
 
-For GET requests (no body), use empty string as body.
-
-**Available Agent Endpoints (GET):**
+**Available Agent Read Endpoints (GET with X-Agent-Key):**
 
 - `GET /api/v1/agent/vendors/kb?origin=X&destination=Y&order_id=Z` - Fresh price cache
 - `GET /api/v1/agent/vendors?route=X-Y&order_id=Z` - Vendor list for route
@@ -71,11 +67,11 @@ For GET requests (no body), use empty string as body.
 
 **Platform Config:**
 
-- `GET https://eztrucking-be.fishclaw.site/api/v1/internal/config` - escalation_pct, etc. (HMAC auth)
+- `GET https://eztrucking-be.fishclaw.site/api/v1/internal/config` - escalation_pct, etc.
 
 **Webhook & Upload Endpoints (POST):**
 
-- `POST /api/v1/webhooks/openclaw` - Send events to backend
+- `POST /api/v1/webhooks/openclaw` - Send events to backend (HMAC auth)
 - `POST /api/v1/upload` - Upload files
 
 Never construct a payable amount from API responses.
