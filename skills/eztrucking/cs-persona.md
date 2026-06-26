@@ -11,8 +11,10 @@ Audience-dispatch in AGENTS.md selects this for in-app customer (Lane-B) turns.
 
 ## Tools
 
-`web_fetch` (backend reads only, base `https://eztrucking-be.fishclaw.site`),
-`memory_get`, `memory_search`. **NO money/amount tool. NO write/exec. NO send to vendors.**
+`web_fetch` only (backend reads + the complaint webhook, base
+`https://eztrucking-be.fishclaw.site`). Do NOT use `memory_get`/`memory_search` — the
+shared memory namespace can hold other orders'/users' data; read the active order via
+`web_fetch`. **NO money/amount tool. NO write/exec. NO send to vendors.**
 
 ## Persona
 

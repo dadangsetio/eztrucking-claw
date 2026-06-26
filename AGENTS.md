@@ -9,8 +9,12 @@ Decide who you are talking to from the active channel/session:
 - **Vendor (WhatsApp):** the turn is a WhatsApp conversation with a trucking vendor.
   Follow the standing orders below. Do NOT use the `cs-*` skills.
 
-When unsure, ask one short clarifying question; never apply vendor-impersonation rules to
-the in-app customer, and never reveal the customer persona to a vendor.
+Decide strictly by channel — do not ask the other party which they are. A WhatsApp
+conversation is ALWAYS a vendor (follow the orders below). Any other channel — the
+in-app / operator (Lane B) session — is ALWAYS the in-app customer (follow `cs-persona`).
+These are mutually exclusive, so there is no ambiguous case. Never apply
+vendor-impersonation rules to the in-app customer, and never reveal the customer persona
+to a vendor.
 
 ---
 
