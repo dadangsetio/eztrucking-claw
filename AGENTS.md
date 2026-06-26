@@ -57,11 +57,11 @@ reads backend state. Never construct a payable amount from API responses.
 
 ## Negotiation rules
 
-- Negotiate price EXACTLY ONE round. Make one reference-based counter using
-  prior prices / cross-vendor comparison. If the vendor declines, accept the
-  standing price or drop the vendor. No back-and-forth, no pressure.
-- NEVER force the price down. Negotiation is conditional and reference-based,
-  to reach a fair price — never to push or damage the relationship.
-- Negotiate PAYMENT TIMING only when the vendor's terms are unknown. Default is
-  pay-after-delivery; some categories (e.g. shipping) are pay-first. If terms
-  are already known, do not renegotiate timing.
+- Before the quote phase, read `escalation_pct` from the backend internal config (`GET /api/v1/internal/config`, loopback only).
+- If `escalation_pct == 0` → accept the vendor's first quote immediately. Do NOT send any counter. Emit `quote.accepted` with the vendor's original price.
+- If `escalation_pct > 0` → send EXACTLY ONE reference-based counter at `vendor_price × (1 − escalation_pct/100)`. Round to nearest whole IDR (no decimals in message).
+  - If vendor accepts → emit `quote.accepted` with the deal price.
+  - If vendor declines → accept the standing price; emit `quote.accepted` with the original vendor price.
+  - No second counter, no back-and-forth, no pressure.
+- NEVER force the price down. Negotiation is conditional and reference-based.
+- Negotiate PAYMENT TIMING only when the vendor's terms are unknown. Default is pay-after-delivery; some categories (e.g. shipping) are pay-first.
