@@ -8,27 +8,48 @@ Receive the vendor's signed contract document over WhatsApp and upload it for ad
 
 Agent detects the vendor has sent a document (PDF, image) after negotiation has resolved and the leg is awaiting a contract.
 
+## IMPORTANT: Implementation Note
+
+This skill requires WhatsApp media handling. For now, the workflow is:
+
+1. Vendor sends contract document via WhatsApp (standard WA message)
+2. Backend receives the media through WhatsApp webhook
+3. Agent uses this skill to confirm the document was received and trigger the flow
+
 ## Tools
 
-`collect_contract` (receive WA media → upload to object store → POST webhook). **NO money/amount tool.**
+`web_fetch` (call backend to confirm document received) + `send` (acknowledge vendor). **NO money/amount tool.**
+
+## Backend API
+
+**BACKEND URL:** `https://eztrucking-be.fishclaw.site`
+
+**Authentication:** All backend calls require HMAC signature:
+
+```
+X-OpenClaw-Signature: sha256=<hmac_hex>
+```
 
 ## Persona
 
-Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emoji, no bot disclosure, vary phrasing.
+Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emoji, no bot disclosure.
 
 ## Steps
 
 1. Detect inbound vendor document (PDF or image) in an active conversation where contract is expected.
-2. Receive the raw file via `collect_contract` tool — do NOT read or extract any figure from the document.
-3. Upload file to object store via `collect_contract` tool. Obtain `file_ref`.
-4. POST to backend: `POST /webhooks/openclaw` with `event_type:"contract.received"`, `order_vendor_id`, `file_ref`.
-5. Optionally acknowledge the vendor. Example WhatsApp:
+2. Confirm with backend that document is received:
+   ```
+   GET https://eztrucking-be.fishclaw.site/api/v1/agent/legs/{order_vendor_id}/status
+   Headers: X-OpenClaw-Signature: sha256=<hmac>
+   ```
+3. Send acknowledgment to vendor. Example WhatsApp:
    - "Sudah kami terima, ditunggu ya"
    - "Makasih, kami proses dulu"
+4. Backend will handle the document processing and notify admin console.
 
-## Backend calls
+## Backend Integration
 
-POST `contract.received` → backend writes `contract_document` row (`unsigned_ref=file_ref`, `status='unsigned'`), notifies admin console. Expected: `{received:true}`.
+The WhatsApp plugin forwards inbound media to the backend via webhook. The backend stores the file and creates a `contract_document` row with `status='pending_signature'`. Admin then signs in the console, and `send-contract` skill handles sending back.
 
 ## Guardrails
 

@@ -6,29 +6,50 @@ Send the admin-signed contract back to the vendor over WhatsApp (gap item 4 — 
 
 ## Trigger
 
-Backend fires a `contract.signed` webhook (to OpenClaw gateway) containing `{order_vendor_id, signed_file_ref}`.
+Backend fires a `contract.signed` webhook (to OpenClaw gateway) containing `{order_vendor_id, signed_file_ref}`. The agent receives this as a run context parameter.
+
+## IMPORTANT: Implementation Note
+
+This skill uses existing WhatsApp `send` tool with a file URL. The backend provides a presigned URL for the signed document.
 
 ## Tools
 
-`send_contract` (download signed file from object store → send to vendor WA as document). **NO money/amount tool.**
+`web_fetch` (get the signed document URL from backend) + `send` (send document to vendor WA). **NO money/amount tool.**
+
+## Backend API
+
+**BACKEND URL:** `https://eztrucking-be.fishclaw.site`
+
+**Authentication:** All backend calls require HMAC signature:
+
+```
+X-OpenClaw-Signature: sha256=<hmac_hex>
+```
 
 ## Persona
 
-Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emoji, no bot disclosure, vary phrasing.
+Vendor-facing — §7a persona required: short, natural Bahasa Indonesia, no emoji, no bot disclosure.
 
 ## Steps
 
 1. Receive `contract.signed` event from backend with `order_vendor_id` and `signed_file_ref`.
-2. Look up `vendor.phone` for the order-vendor leg via `kb-lookup`.
-3. Download the signed file from object store using `signed_file_ref`.
-4. Send the file to the vendor's WhatsApp as a document via `send_contract` tool.
+2. Get vendor phone from backend:
+   ```
+   GET https://eztrucking-be.fishclaw.site/api/v1/agent/legs/{order_vendor_id}/status
+   Headers: X-OpenClaw-Signature: sha256=<hmac>
+   ```
+3. Build the signed document URL from backend (provided in webhook event as `signed_file_ref`).
+4. Send the file to the vendor's WhatsApp as a document via `send` tool:
+   ```
+   send(to="vendor_phone", message="", attachments=[{"url": signed_url, "type": "document"}])
+   ```
 5. Brief confirmation message. Example WhatsApp:
    - "Pak, ini kontraknya sudah ditandatangani"
    - "Tolong dicek ya"
 
 ## Backend calls
 
-None — triggered by backend webhook. No transition committed here; the backend advances contract status on `send_contract` tool completion if the gateway confirms delivery.
+Backend provides the signed document URL through the webhook event. The agent downloads and sends via WhatsApp. On successful send, backend updates `contract_document.status='sent_back'`.
 
 ## Guardrails
 

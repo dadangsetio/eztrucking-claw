@@ -51,9 +51,34 @@ orders at all times.
 
 ## Backend API
 
-All backend reads use base URL `https://eztrucking-be.fishclaw.site`.
-Use `web_fetch` with this base URL when running `kb-lookup` or any skill that
-reads backend state. Never construct a payable amount from API responses.
+**BACKEND URL:** `https://eztrucking-be.fishclaw.site`
+
+**All backend calls require HMAC authentication.**
+Use header: `X-OpenClaw-Signature: sha256=<hmac>` where HMAC is computed as:
+
+```
+HMAC-SHA256(body, OPENCLAW_WEBHOOK_SECRET)
+```
+
+For GET requests (no body), use empty string as body.
+
+**Available Agent Endpoints (GET):**
+
+- `GET /api/v1/agent/vendors/kb?origin=X&destination=Y&order_id=Z` - Fresh price cache
+- `GET /api/v1/agent/vendors?route=X-Y&order_id=Z` - Vendor list for route
+- `GET /api/v1/agent/orders/:id` - Order details
+- `GET /api/v1/agent/legs/:order_vendor_id/status` - Leg state
+
+**Platform Config:**
+
+- `GET https://eztrucking-be.fishclaw.site/api/v1/internal/config` - escalation_pct, etc. (HMAC auth)
+
+**Webhook & Upload Endpoints (POST):**
+
+- `POST /api/v1/webhooks/openclaw` - Send events to backend
+- `POST /api/v1/upload` - Upload files
+
+Never construct a payable amount from API responses.
 
 ## Negotiation rules
 

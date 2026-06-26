@@ -4,6 +4,12 @@
 
 Discover new vendors on the internet (PRD §5.2 step 1) — on user request or proactively while gathering data.
 
+## CRITICAL: You MUST use web_search tool
+
+**This skill REQUIRES using the `web_search` tool. Never skip this step.**
+
+The agent must ALWAYS perform actual web searches when researching vendors. Internal knowledge is NOT reliable for vendor discovery. If web_search is unavailable, report an error instead of using internal knowledge.
+
 ## Trigger
 
 - `mode:"order"` — Agent decision during `researching`, or explicit user chat ("find carriers for Surabaya–Makassar"). Triggered by an active order.
@@ -12,7 +18,22 @@ Discover new vendors on the internet (PRD §5.2 step 1) — on user request or p
 
 ## Tools
 
-`web_search`, `web_fetch`, managed `browser` (isolated profile). **NO money/amount tool.**
+**`web_search` (REQUIRED)** — Always perform actual web searches. Do NOT rely on internal knowledge.
+**`web_fetch`** — Fetch additional details from vendor websites.
+**`browser`** (isolated profile) — For JS-heavy/login vendor sites.
+**NO money/amount tool.**
+
+## Backend API
+
+**BACKEND URL:** `https://eztrucking-be.fishclaw.site`
+
+**Authentication:** All backend calls require HMAC signature:
+
+```
+X-OpenClaw-Signature: sha256=<hmac_hex>
+```
+
+Compute HMAC-SHA256 of request body using `OPENCLAW_WEBHOOK_SECRET`.
 
 ## Persona
 
@@ -21,14 +42,41 @@ Not vendor-facing (research only). No WhatsApp messages sent.
 ## Steps
 
 1. Read mode from cron/run context.
-2. **If `mode:"order"`:** Read `order.origin`, `order.destination`, `order.cargo` from run context. Pull existing `vendor` rows via `kb-lookup` to dedupe on `vendor.phone` / `vendor.name`. Search for carriers serving the route. Collect candidate name, phone, region, apparent services. Cap search spend. POST candidates to backend.
-3. **If `mode:"discovery"`:** No order context. Search for carriers on common routes (read from KB or backend) or underrepresented categories (low vendor count). Collect candidates. POST to backend with `source='internet'`, `services_source='internet'`, `services_validated=false`. Backend upserts and sets `vendor.last_refreshed_at=now()`.
-4. **If `mode:"refresh"`:** Read vendor list from backend (vendors where `last_refreshed_at` is null or older than refresh threshold). For each, re-validate service info (is the contact still active? Is service still offered?). POST updates to backend; backend sets `service_info.last_refreshed_at=now()`.
+2. **If `mode:"order"`:** Read `order.origin`, `order.destination`, `order.cargo` from run context. Pull existing `vendor` rows via `kb-lookup` to dedupe on `vendor.phone` / `vendor.name`. **ALWAYS call `web_search` tool** to search for carriers serving the route. Collect candidate name, phone, region, apparent services. Cap search spend. POST candidates to backend via webhook.
+3. **If `mode:"discovery"`:** No order context. **ALWAYS call `web_search`** to search for carriers on common routes or underrepresented categories. Collect candidates. POST to backend with `source='internet'`, `services_source='internet'`, `services_validated=false`.
+4. **If `mode:"refresh"`:** Read vendor list from backend. **ALWAYS call `web_search`** to re-validate vendor info (is contact still active? Is service still offered?). POST updates to backend.
 5. Do not message any vendor.
 
-## Backend calls
+## Web Search Examples
 
-POST candidates/updates → backend vendor endpoints. `mode:"discovery"/"refresh"` upsert `vendor` + `service_info`, set `last_refreshed_at`. `mode:"order"` works as before. Expected: created/updated `vendor` ids.
+Always use actual web search. Example queries:
+
+- "expedisi Jakarta Surabaya truk besar"
+- "jasa angkut barang Makassar"
+- "trucking company Java Indonesia"
+- "[city name] trucking services"
+
+## Backend Webhook Calls
+
+POST vendor discoveries/updates via webhook:
+
+```
+POST https://eztrucking-be.fishclaw.site/api/v1/webhooks/openclaw
+X-OpenClaw-Signature: sha256=<hmac>
+Content-Type: application/json
+
+{
+  "event_type": "vendor.discovered",
+  "event_id": "<unique_id>",
+  "payload": {
+    "name": "Vendor Name",
+    "phone": "0812xxxx",
+    "routes": ["Jakarta-Surabaya"],
+    "truck_types": ["truck"],
+    "source": "internet"
+  }
+}
+```
 
 ## Guardrails
 
