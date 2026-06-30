@@ -37,6 +37,8 @@ services:
       OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
       OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: ${OPENCLAW_ALLOW_INSECURE_PRIVATE_WS:-}
+      OPENCLAW_TRUSTED_PROXIES: ${OPENCLAW_TRUSTED_PROXIES:-}
+      OPENCLAW_WEB_SEARCH_PROVIDER: ${OPENCLAW_WEB_SEARCH_PROVIDER:-duckduckgo}
       # Direct read/write to the EzTrucking Postgres (another container/deployment).
       # The agent reads/writes via `psql "$DATABASE_URL"` (exec tool is full).
       # ponytail: raw DSN = full table access; scope it to a limited role (see .env.example).
@@ -93,7 +95,9 @@ services:
       - "sh"
       - "-c"
       - >-
-        printf '{"gateway":{"mode":"local","trustedProxies":["loopback","private"],"controlUi":{"allowedOrigins":["http://localhost:18789","http://127.0.0.1:18789","https://claw.lawpriority.fun","http://claw.lawpriority.fun","http://eztrucking-claw-fuxhlj-7e25cf-20-92-45-6.sslip.io","https://eztrucking-be.fishclaw.site"]}},"models":{"providers":{"anthropic":{"baseUrl":"https://openrouter.ai/api/v1"}}},"agents":{"defaults":{"model":"anthropic/claude-haiku-4-5"}},"tools":{"exec":{"mode":"full"}},"channels":{"whatsapp":{"dmPolicy":"pairing"}},"plugins":{"entries":{"acpx":{"config":{"permissionMode":"approve-all","nonInteractivePermissions":"deny"}},"whatsapp":{}}}}' > /home/node/.openclaw/openclaw.json 2>/dev/null || true;
+        _search="$${OPENCLAW_WEB_SEARCH_PROVIDER:-duckduckgo}";
+        _proxies="$${OPENCLAW_TRUSTED_PROXIES:-[\"loopback\",\"private\"]}";
+        printf '{"gateway":{"mode":"local","trustedProxies":'"$$_proxies"',"controlUi":{"allowedOrigins":["http://localhost:18789","http://127.0.0.1:18789","https://claw.lawpriority.fun","http://claw.lawpriority.fun","http://eztrucking-claw-fuxhlj-7e25cf-20-92-45-6.sslip.io","https://eztrucking-be.fishclaw.site"]}},"models":{"providers":{"anthropic":{"baseUrl":"https://openrouter.ai/api/v1"}}},"agents":{"defaults":{"model":"anthropic/claude-haiku-4-5"}},"tools":{"exec":{"mode":"full"},"web":{"search":{"provider":"'"$$_search"'"}}},"channels":{"whatsapp":{"dmPolicy":"pairing"}},"plugins":{"entries":{"acpx":{"config":{"permissionMode":"approve-all","nonInteractivePermissions":"deny"}},"whatsapp":{},"'"$$_search"'":{"enabled":true}}}}' > /home/node/.openclaw/openclaw.json 2>/dev/null || true;
         rm -rf /home/node/.openclaw/extensions/whatsapp 2>/dev/null || true;
         node dist/index.js plugins install clawhub:@openclaw/whatsapp --force 2>&1 || true;
         exec node dist/index.js gateway
