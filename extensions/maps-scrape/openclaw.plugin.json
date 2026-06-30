@@ -1,0 +1,6 @@
+{
+  "id": "maps-scrape",
+  "activation": {
+    "onStartup": true
+  }
+}

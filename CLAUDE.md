@@ -25,7 +25,7 @@ These three files are the EzTrucking customization layer on top of stock OpenCla
 |---|---|
 | `AGENTS.md` | **Standing orders** — injected into every agent turn as the agent's system prompt. Defined at `["agents.md", 10]` in `src/agents/system-prompt.ts` bootstrap list (confirmed against pinned commit). Defines scope, persona, money rules, and negotiation limits. Read this before modifying any agent behavior. |
 | `HEARTBEAT.md` | **Periodic task orders** — the heartbeat agent turn checks overdue legs, sends one status-check message per overdue vendor, and reports status changes to the backend. |
-| `skills/eztrucking/` | **13 skill files** — each is a SKILL.md loaded into the agent's skill workspace. |
+| `skills/eztrucking/` | **14 skill files** — each is a SKILL.md loaded into the agent's skill workspace. |
 | `PINNED_COMMIT` | **Upstream base** — the OpenClaw commit this fork diverges from. Used to audit changes and rebase. `git log 65adb135814..HEAD` lists all EzTrucking-specific commits. |
 | `config/eztrucking-tools.json` | **Audit/spec document only** — not loaded at runtime. The live tool profile is wired in `~/.openclaw/openclaw.json` under the `tools{}` block (profile: `"messaging"`, alsoAllow, deny). See §Tool Profile below. |
 
@@ -53,7 +53,7 @@ The agent's tool profile is configured in `~/.openclaw/openclaw.json` (generated
 {
   "tools": {
     "profile": "messaging",
-    "alsoAllow": ["web_search", "web_fetch", "browser", "memory_get", "memory_search", "skill_write"],
+    "alsoAllow": ["web_search", "web_fetch", "browser", "memory_get", "memory_search", "skill_write", "maps_scrape"],
     "deny": ["exec", "write", "edit", "apply_patch", "code_execution"]
   },
   "browser": {
@@ -71,6 +71,7 @@ The agent's tool profile is configured in `~/.openclaw/openclaw.json` (generated
 | Skill | Purpose |
 |---|---|
 | `vendor-search.md` | Discover new vendors via web search / browser (research only, no messaging) |
+| `maps-scrape.md` | Discover carriers via the deployed google-maps-scraper (`map-scrape.fishclaw.site`); structured source feeding `vendor-search` (research only) |
 | `service-validate.md` | Verify internet-sourced vendor services before selection |
 | `cargo-match.md` | Match cargo requirements to vendor capabilities |
 | `kb-lookup.md` | Read active orders, legs, and vendors from the backend |

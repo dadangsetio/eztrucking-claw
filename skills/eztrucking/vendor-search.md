@@ -18,6 +18,7 @@ The agent must ALWAYS perform actual web searches when researching vendors. Inte
 
 ## Tools
 
+**`maps_scrape`** — Structured Google Maps source (carriers/ekspedisi). High-yield; try first.
 **`web_search` (REQUIRED)** — Always perform actual web searches. Do NOT rely on internal knowledge.
 **`web_fetch`** — Fetch additional details from vendor websites.
 **`browser`** (isolated profile) — For JS-heavy/login vendor sites.
@@ -42,8 +43,8 @@ Not vendor-facing (research only). No WhatsApp messages sent.
 ## Steps
 
 1. Read mode from cron/run context.
-2. **If `mode:"order"`:** Read `order.origin`, `order.destination`, `order.cargo` from run context. Pull existing `vendor` rows via `kb-lookup` to dedupe on `vendor.phone` / `vendor.name`. **ALWAYS call `web_search` tool** to search for carriers serving the route. Collect candidate name, phone, region, apparent services. Cap search spend. POST candidates to backend via webhook.
-3. **If `mode:"discovery"`:** No order context. **ALWAYS call `web_search`** to search for carriers on common routes or underrepresented categories. Collect candidates. POST to backend with `source='internet'`, `services_source='internet'`, `services_validated=false`.
+2. **If `mode:"order"`:** Read `order.origin`, `order.destination`, `order.cargo` from run context. Pull existing `vendor` rows via `kb-lookup` to dedupe on `vendor.phone` / `vendor.name`. Run `maps-scrape` first (high-yield structured source for the route); if it times out or fails, continue. Then **ALWAYS call `web_search` tool** to search for carriers serving the route. Collect candidate name, phone, region, apparent services. Cap search spend. POST candidates to backend via webhook.
+3. **If `mode:"discovery"`:** No order context. Run `maps-scrape` for common routes, then **ALWAYS call `web_search`** to search for carriers on common routes or underrepresented categories. Collect candidates. POST to backend with `source='internet'`, `services_source='internet'`, `services_validated=false`.
 4. **If `mode:"refresh"`:** Read vendor list from backend. **ALWAYS call `web_search`** to re-validate vendor info (is contact still active? Is service still offered?). POST updates to backend.
 5. Do not message any vendor.
 
